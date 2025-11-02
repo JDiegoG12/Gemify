@@ -21,15 +21,21 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Cliente gRPC para la reproducción de canciones desde el Servidor de Streaming.
+ * Cliente gRPC para la reproducción de canciones desde el Servidor de
+ * Streaming.
  * <p>
- * Esta clase establece una conexión gRPC con el servidor de streaming y recibe fragmentos
- * de audio MP3 mediante un flujo unidireccional del servidor al cliente. Los fragmentos
- * se almacenan temporalmente en disco y se reproducen utilizando la librería JLayer
+ * Esta clase establece una conexión gRPC con el servidor de streaming y recibe
+ * fragmentos
+ * de audio MP3 mediante un flujo unidireccional del servidor al cliente. Los
+ * fragmentos
+ * se almacenan temporalmente en disco y se reproducen utilizando la librería
+ * JLayer
  * en combinación con la Java Sound API.
  * <p>
- * Implementa un mecanismo de control de reproducción basado en una bandera volátil,
- * permitiendo detener la reproducción de forma segura desde otro hilo (por ejemplo, al salir del menú).
+ * Implementa un mecanismo de control de reproducción basado en una bandera
+ * volátil,
+ * permitiendo detener la reproducción de forma segura desde otro hilo (por
+ * ejemplo, al salir del menú).
  * 
  */
 public class StreamingAudioClient {
@@ -45,7 +51,8 @@ public class StreamingAudioClient {
     private final AudioServiceGrpc.AudioServiceBlockingStub blockingStub;
 
     /**
-     * Pool de hilos utilizado para gestionar las tareas concurrentes de red y audio.
+     * Pool de hilos utilizado para gestionar las tareas concurrentes de red y
+     * audio.
      * Se inicializa bajo demanda al iniciar la reproducción.
      */
     private ExecutorService executor;
@@ -89,29 +96,33 @@ public class StreamingAudioClient {
      * <p>
      * Este método configura los hilos necesarios para:
      * <ul>
-     *   <li>Recibir fragmentos de audio del servidor gRPC</li>
-     *   <li>Almacenarlos temporalmente y reproducirlos</li>
+     * <li>Recibir fragmentos de audio del servidor gRPC</li>
+     * <li>Almacenarlos temporalmente y reproducirlos</li>
      * </ul>
      * Retorna inmediatamente después de iniciar los hilos, permitiendo al cliente
      * continuar con otras operaciones (como mostrar un menú).
      * 
-     * @param nombreCancion nombre del archivo de audio MP3 a reproducir (ej: "Afuera.mp3")
+     * @param nombreCancion nombre del archivo de audio MP3 a reproducir (ej:
+     *                      "Afuera.mp3")
+     * @param idUsuario El ID del usuario que está realizando la reproducción.
      * 
-     * @implNote Si ya hay una reproducción en curso, se detiene automáticamente antes
+     * @implNote Si ya hay una reproducción en curso, se detiene automáticamente
+     *           antes
      *           de iniciar la nueva.
      */
-    public void reproducirCancion(String nombreCancion) {
+    public void reproducirCancion(String nombreCancion, int idUsuario) { // <-- CAMBIO EN LA FIRMA
         detenerReproduccion();
         this.isPlaying = true;
         this.executor = Executors.newFixedThreadPool(2);
 
-        System.out.println(">> Solicitando stream para la cancion: " + nombreCancion);
+        System.out.println(">> Solicitando stream para la cancion: " + nombreCancion + " (Usuario: " + idUsuario + ")");
 
         try {
             PipedOutputStream pipeOut = new PipedOutputStream();
             PipedInputStream pipeIn = new PipedInputStream(pipeOut, 128 * 1024);
 
-            executor.submit(() -> recibirFragmentos(nombreCancion, pipeOut));
+            // Pasamos el idUsuario al hilo de red.
+            executor.submit(() -> recibirFragmentos(nombreCancion, idUsuario, pipeOut));
             this.audioThread = new Thread(() -> recibirYReproducirComoArchivo(pipeIn));
             this.audioThread.start();
 
@@ -123,16 +134,20 @@ public class StreamingAudioClient {
     /**
      * Hilo encargado de recibir fragmentos de audio del servidor gRPC.
      * <p>
-     * Lee los fragmentos del stream gRPC y los escribe en un {@link PipedOutputStream}
+     * Lee los fragmentos del stream gRPC y los escribe en un
+     * {@link PipedOutputStream}
      * para que sean consumidos por el hilo de audio.
      * 
      * @param nombreCancion nombre de la canción solicitada al servidor
-     * @param pipeOut flujo de salida conectado al pipe de audio
+     * @param pipeOut       flujo de salida conectado al pipe de audio
      */
-    private void recibirFragmentos(String nombreCancion, PipedOutputStream pipeOut) {
+    private void recibirFragmentos(String nombreCancion, int idUsuario, PipedOutputStream pipeOut) {
         System.out.println("[Hilo de Red] Iniciado.");
         try {
-            PeticionDTO request = PeticionDTO.newBuilder().setNombreCancion(nombreCancion).build();
+            PeticionDTO request = PeticionDTO.newBuilder()
+                    .setNombreCancion(nombreCancion)
+                    .setIdUsuario(idUsuario)
+                    .build();
             Iterator<FragmentoCancion> fragmentos = blockingStub.streamAudio(request);
 
             while (fragmentos.hasNext() && isPlaying) {
@@ -157,7 +172,8 @@ public class StreamingAudioClient {
     /**
      * Hilo encargado de recibir los fragmentos de audio y reproducirlos.
      * <p>
-     * Almacena los fragmentos recibidos en un archivo temporal MP3 y luego lo reproduce
+     * Almacena los fragmentos recibidos en un archivo temporal MP3 y luego lo
+     * reproduce
      * utilizando JLayer y la Java Sound API.
      * 
      * @param pipeIn flujo de entrada conectado al pipe de red
@@ -244,13 +260,15 @@ public class StreamingAudioClient {
     }
 
     /**
-     * Convierte un arreglo de muestras de audio en formato {@code short[]} a {@code byte[]}.
+     * Convierte un arreglo de muestras de audio en formato {@code short[]} a
+     * {@code byte[]}.
      * <p>
-     * Este método es necesario porque la Java Sound API espera datos en formato de bytes,
+     * Este método es necesario porque la Java Sound API espera datos en formato de
+     * bytes,
      * mientras que JLayer entrega las muestras en formato de enteros cortos.
      * 
      * @param shorts arreglo de muestras de audio en formato short
-     * @param len número de muestras válidas en el arreglo
+     * @param len    número de muestras válidas en el arreglo
      * @return arreglo de bytes listo para ser reproducido
      */
     private byte[] toByteArray(short[] shorts, int len) {
@@ -267,10 +285,10 @@ public class StreamingAudioClient {
      * <p>
      * Este método:
      * <ul>
-     *   <li>Cambia la bandera {@link #isPlaying} a {@code false}</li>
-     *   <li>Detiene y cierra la línea de audio</li>
-     *   <li>Interrumpe el hilo de audio</li>
-     *   <li>Apaga el pool de hilos</li>
+     * <li>Cambia la bandera {@link #isPlaying} a {@code false}</li>
+     * <li>Detiene y cierra la línea de audio</li>
+     * <li>Interrumpe el hilo de audio</li>
+     * <li>Apaga el pool de hilos</li>
      * </ul>
      * Es seguro llamarlo desde cualquier hilo, incluido el hilo principal del menú.
      */
@@ -295,10 +313,12 @@ public class StreamingAudioClient {
     /**
      * Cierra todos los recursos utilizados por el cliente gRPC.
      * <p>
-     * Invoca {@link #detenerReproduccion()} para garantizar que no queden hilos activos
+     * Invoca {@link #detenerReproduccion()} para garantizar que no queden hilos
+     * activos
      * antes de cerrar el canal gRPC.
      * 
-     * @throws InterruptedException si el hilo actual es interrumpido mientras espera
+     * @throws InterruptedException si el hilo actual es interrumpido mientras
+     *                              espera
      *                              el cierre del canal
      */
     public void shutdown() throws InterruptedException {

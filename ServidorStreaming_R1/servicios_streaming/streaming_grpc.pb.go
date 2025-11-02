@@ -22,8 +22,6 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AudioServiceClient interface {
-	// Un RPC de streaming del servidor. El cliente envía una petición con el
-	// nombre de la canción y el servidor responde con un flujo de fragmentos de audio.
 	StreamAudio(ctx context.Context, in *PeticionDTO, opts ...grpc.CallOption) (AudioService_StreamAudioClient, error)
 }
 
@@ -71,8 +69,6 @@ func (x *audioServiceStreamAudioClient) Recv() (*FragmentoCancion, error) {
 // All implementations must embed UnimplementedAudioServiceServer
 // for forward compatibility
 type AudioServiceServer interface {
-	// Un RPC de streaming del servidor. El cliente envía una petición con el
-	// nombre de la canción y el servidor responde con un flujo de fragmentos de audio.
 	StreamAudio(*PeticionDTO, AudioService_StreamAudioServer) error
 	mustEmbedUnimplementedAudioServiceServer()
 }

@@ -38,6 +38,16 @@ public final class StreamingProto {
      */
     com.google.protobuf.ByteString
         getNombreCancionBytes();
+
+    /**
+     * <pre>
+     * NUEVO: El ID del usuario que está solicitando la canción.
+     * </pre>
+     *
+     * <code>int32 idUsuario = 2;</code>
+     * @return The idUsuario.
+     */
+    int getIdUsuario();
   }
   /**
    * <pre>
@@ -126,6 +136,21 @@ public final class StreamingProto {
       }
     }
 
+    public static final int IDUSUARIO_FIELD_NUMBER = 2;
+    private int idUsuario_ = 0;
+    /**
+     * <pre>
+     * NUEVO: El ID del usuario que está solicitando la canción.
+     * </pre>
+     *
+     * <code>int32 idUsuario = 2;</code>
+     * @return The idUsuario.
+     */
+    @java.lang.Override
+    public int getIdUsuario() {
+      return idUsuario_;
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -143,6 +168,9 @@ public final class StreamingProto {
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(nombreCancion_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, nombreCancion_);
       }
+      if (idUsuario_ != 0) {
+        output.writeInt32(2, idUsuario_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -154,6 +182,10 @@ public final class StreamingProto {
       size = 0;
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(nombreCancion_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, nombreCancion_);
+      }
+      if (idUsuario_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, idUsuario_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSize = size;
@@ -172,6 +204,8 @@ public final class StreamingProto {
 
       if (!getNombreCancion()
           .equals(other.getNombreCancion())) return false;
+      if (getIdUsuario()
+          != other.getIdUsuario()) return false;
       if (!getUnknownFields().equals(other.getUnknownFields())) return false;
       return true;
     }
@@ -185,6 +219,8 @@ public final class StreamingProto {
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + NOMBRECANCION_FIELD_NUMBER;
       hash = (53 * hash) + getNombreCancion().hashCode();
+      hash = (37 * hash) + IDUSUARIO_FIELD_NUMBER;
+      hash = (53 * hash) + getIdUsuario();
       hash = (29 * hash) + getUnknownFields().hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -321,6 +357,7 @@ public final class StreamingProto {
         super.clear();
         bitField0_ = 0;
         nombreCancion_ = "";
+        idUsuario_ = 0;
         return this;
       }
 
@@ -356,6 +393,9 @@ public final class StreamingProto {
         int from_bitField0_ = bitField0_;
         if (((from_bitField0_ & 0x00000001) != 0)) {
           result.nombreCancion_ = nombreCancion_;
+        }
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.idUsuario_ = idUsuario_;
         }
       }
 
@@ -408,6 +448,9 @@ public final class StreamingProto {
           bitField0_ |= 0x00000001;
           onChanged();
         }
+        if (other.getIdUsuario() != 0) {
+          setIdUsuario(other.getIdUsuario());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         onChanged();
         return this;
@@ -439,6 +482,11 @@ public final class StreamingProto {
                 bitField0_ |= 0x00000001;
                 break;
               } // case 10
+              case 16: {
+                idUsuario_ = input.readInt32();
+                bitField0_ |= 0x00000002;
+                break;
+              } // case 16
               default: {
                 if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                   done = true; // was an endgroup tag
@@ -547,6 +595,50 @@ public final class StreamingProto {
         onChanged();
         return this;
       }
+
+      private int idUsuario_ ;
+      /**
+       * <pre>
+       * NUEVO: El ID del usuario que está solicitando la canción.
+       * </pre>
+       *
+       * <code>int32 idUsuario = 2;</code>
+       * @return The idUsuario.
+       */
+      @java.lang.Override
+      public int getIdUsuario() {
+        return idUsuario_;
+      }
+      /**
+       * <pre>
+       * NUEVO: El ID del usuario que está solicitando la canción.
+       * </pre>
+       *
+       * <code>int32 idUsuario = 2;</code>
+       * @param value The idUsuario to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIdUsuario(int value) {
+
+        idUsuario_ = value;
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * NUEVO: El ID del usuario que está solicitando la canción.
+       * </pre>
+       *
+       * <code>int32 idUsuario = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearIdUsuario() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        idUsuario_ = 0;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -616,20 +708,12 @@ public final class StreamingProto {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <pre>
-     * Un trozo (chunk) del archivo de audio en bytes.
-     * </pre>
-     *
      * <code>bytes data = 1;</code>
      * @return The data.
      */
     com.google.protobuf.ByteString getData();
   }
   /**
-   * <pre>
-   * Mensaje que el servidor envía en el stream, conteniendo un fragmento de la canción.
-   * </pre>
-   *
    * Protobuf type {@code servicios_streaming.FragmentoCancion}
    */
   public static final class FragmentoCancion extends
@@ -668,10 +752,6 @@ public final class StreamingProto {
     public static final int DATA_FIELD_NUMBER = 1;
     private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <pre>
-     * Un trozo (chunk) del archivo de audio en bytes.
-     * </pre>
-     *
      * <code>bytes data = 1;</code>
      * @return The data.
      */
@@ -838,10 +918,6 @@ public final class StreamingProto {
       return builder;
     }
     /**
-     * <pre>
-     * Mensaje que el servidor envía en el stream, conteniendo un fragmento de la canción.
-     * </pre>
-     *
      * Protobuf type {@code servicios_streaming.FragmentoCancion}
      */
     public static final class Builder extends
@@ -1011,10 +1087,6 @@ public final class StreamingProto {
 
       private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <pre>
-       * Un trozo (chunk) del archivo de audio en bytes.
-       * </pre>
-       *
        * <code>bytes data = 1;</code>
        * @return The data.
        */
@@ -1023,10 +1095,6 @@ public final class StreamingProto {
         return data_;
       }
       /**
-       * <pre>
-       * Un trozo (chunk) del archivo de audio en bytes.
-       * </pre>
-       *
        * <code>bytes data = 1;</code>
        * @param value The data to set.
        * @return This builder for chaining.
@@ -1039,10 +1107,6 @@ public final class StreamingProto {
         return this;
       }
       /**
-       * <pre>
-       * Un trozo (chunk) del archivo de audio en bytes.
-       * </pre>
-       *
        * <code>bytes data = 1;</code>
        * @return This builder for chaining.
        */
@@ -1135,14 +1199,15 @@ public final class StreamingProto {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\017streaming.proto\022\023servicios_streaming\"$" +
-      "\n\013PeticionDTO\022\025\n\rnombreCancion\030\001 \001(\t\" \n\020" +
-      "FragmentoCancion\022\014\n\004data\030\001 \001(\0142h\n\014AudioS" +
-      "ervice\022X\n\013StreamAudio\022 .servicios_stream" +
-      "ing.PeticionDTO\032%.servicios_streaming.Fr" +
-      "agmentoCancion0\001BO\n&co.edu.unicauca.dist" +
-      "ribuidos.streamingB\016StreamingProtoZ\025./se" +
-      "rvicios_streamingb\006proto3"
+      "\n\017streaming.proto\022\023servicios_streaming\"7" +
+      "\n\013PeticionDTO\022\025\n\rnombreCancion\030\001 \001(\t\022\021\n\t" +
+      "idUsuario\030\002 \001(\005\" \n\020FragmentoCancion\022\014\n\004d" +
+      "ata\030\001 \001(\0142h\n\014AudioService\022X\n\013StreamAudio" +
+      "\022 .servicios_streaming.PeticionDTO\032%.ser" +
+      "vicios_streaming.FragmentoCancion0\001BO\n&c" +
+      "o.edu.unicauca.distribuidos.streamingB\016S" +
+      "treamingProtoZ\025./servicios_streamingb\006pr" +
+      "oto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -1153,7 +1218,7 @@ public final class StreamingProto {
     internal_static_servicios_streaming_PeticionDTO_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_servicios_streaming_PeticionDTO_descriptor,
-        new java.lang.String[] { "NombreCancion", });
+        new java.lang.String[] { "NombreCancion", "IdUsuario", });
     internal_static_servicios_streaming_FragmentoCancion_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_servicios_streaming_FragmentoCancion_fieldAccessorTable = new

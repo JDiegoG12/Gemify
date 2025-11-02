@@ -3,9 +3,6 @@ package co.edu.unicauca.distribuidos.streaming;
 import static io.grpc.MethodDescriptor.generateFullMethodName;
 
 /**
- * <pre>
- * El servicio de streaming de audio.
- * </pre>
  */
 @javax.annotation.Generated(
     value = "by gRPC proto compiler (version 1.64.0)",
@@ -94,17 +91,10 @@ public final class AudioServiceGrpc {
   }
 
   /**
-   * <pre>
-   * El servicio de streaming de audio.
-   * </pre>
    */
   public interface AsyncService {
 
     /**
-     * <pre>
-     * Un RPC de streaming del servidor. El cliente envía una petición con el
-     * nombre de la canción y el servidor responde con un flujo de fragmentos de audio.
-     * </pre>
      */
     default void streamAudio(co.edu.unicauca.distribuidos.streaming.StreamingProto.PeticionDTO request,
         io.grpc.stub.StreamObserver<co.edu.unicauca.distribuidos.streaming.StreamingProto.FragmentoCancion> responseObserver) {
@@ -114,9 +104,6 @@ public final class AudioServiceGrpc {
 
   /**
    * Base class for the server implementation of the service AudioService.
-   * <pre>
-   * El servicio de streaming de audio.
-   * </pre>
    */
   public static abstract class AudioServiceImplBase
       implements io.grpc.BindableService, AsyncService {
@@ -128,9 +115,6 @@ public final class AudioServiceGrpc {
 
   /**
    * A stub to allow clients to do asynchronous rpc calls to service AudioService.
-   * <pre>
-   * El servicio de streaming de audio.
-   * </pre>
    */
   public static final class AudioServiceStub
       extends io.grpc.stub.AbstractAsyncStub<AudioServiceStub> {
@@ -146,10 +130,6 @@ public final class AudioServiceGrpc {
     }
 
     /**
-     * <pre>
-     * Un RPC de streaming del servidor. El cliente envía una petición con el
-     * nombre de la canción y el servidor responde con un flujo de fragmentos de audio.
-     * </pre>
      */
     public void streamAudio(co.edu.unicauca.distribuidos.streaming.StreamingProto.PeticionDTO request,
         io.grpc.stub.StreamObserver<co.edu.unicauca.distribuidos.streaming.StreamingProto.FragmentoCancion> responseObserver) {
@@ -160,9 +140,6 @@ public final class AudioServiceGrpc {
 
   /**
    * A stub to allow clients to do synchronous rpc calls to service AudioService.
-   * <pre>
-   * El servicio de streaming de audio.
-   * </pre>
    */
   public static final class AudioServiceBlockingStub
       extends io.grpc.stub.AbstractBlockingStub<AudioServiceBlockingStub> {
@@ -178,10 +155,6 @@ public final class AudioServiceGrpc {
     }
 
     /**
-     * <pre>
-     * Un RPC de streaming del servidor. El cliente envía una petición con el
-     * nombre de la canción y el servidor responde con un flujo de fragmentos de audio.
-     * </pre>
      */
     public java.util.Iterator<co.edu.unicauca.distribuidos.streaming.StreamingProto.FragmentoCancion> streamAudio(
         co.edu.unicauca.distribuidos.streaming.StreamingProto.PeticionDTO request) {
@@ -192,9 +165,6 @@ public final class AudioServiceGrpc {
 
   /**
    * A stub to allow clients to do ListenableFuture-style rpc calls to service AudioService.
-   * <pre>
-   * El servicio de streaming de audio.
-   * </pre>
    */
   public static final class AudioServiceFutureStub
       extends io.grpc.stub.AbstractFutureStub<AudioServiceFutureStub> {

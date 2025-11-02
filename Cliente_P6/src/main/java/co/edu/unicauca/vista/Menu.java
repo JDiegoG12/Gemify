@@ -123,7 +123,7 @@ public class Menu {
         String nombreArchivo = cancionSeleccionada.getTitulo() + ".mp3";
 
         // 5. Inicia la reproducción y la lógica de espera/detención.
-        streamingClient.reproducirCancion(nombreArchivo);
+        streamingClient.reproducirCancion(nombreArchivo, this.userId);
         
         System.out.println("\n+++ Reproduciendo '" + cancionSeleccionada.getTitulo() + "'... Presione Enter para detener. +++");
         try {

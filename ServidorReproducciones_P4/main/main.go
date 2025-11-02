@@ -2,18 +2,39 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
-	controlador "tendencias/capaConotroladores"
+	controladores "tendencias/capaConotroladores" // Asegúrate de que esta ruta sea correcta
 )
 
 func main() {
-	ctrl := controlador.NuevoControladorTendencias()
+	fmt.Println("Iniciando Servidor de Reproducciones...")
 
-	http.HandleFunc("/tendencias/reproduccion", ctrl.RegistrarReproduccionHandler)
-	http.HandleFunc("/tendencias/listarReproducciones", ctrl.ListarReproduccionesHandler)
+	ctrl := controladores.NuevoControladorTendencias()
 
-	fmt.Println("Servicio de Tendencias escuchando en el puerto 5000...")
-	if err := http.ListenAndServe(":5000", nil); err != nil {
-		fmt.Println("Error iniciando el servidor:", err)
+	// MODIFICADO: Rutas más estándar para una API REST.
+	// POST /reproducciones   -> Para crear un nuevo recurso (una reproducción).
+	// GET  /reproducciones   -> Para listar los recursos (con filtro opcional).
+	http.HandleFunc("/reproducciones", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			ctrl.ListarReproduccionesHandler(w, r)
+		case http.MethodPost:
+			ctrl.RegistrarReproduccionHandler(w, r)
+		default:
+			// Si es otro método (PUT, DELETE, etc.), devolvemos un error.
+			http.Error(w, "Metodo no permitido", http.StatusMethodNotAllowed)
+		}
+	})
+
+	// CAMBIO CLAVE: Cambiamos el puerto a 5002.
+	puerto := ":5002"
+	fmt.Printf(" Servidor de Reproducciones escuchando en el puerto %s\n", puerto)
+	fmt.Println("Endpoints disponibles:")
+	fmt.Println("  - POST /reproducciones")
+	fmt.Println("  - GET  /reproducciones?idUsuario={id}")
+
+	if err := http.ListenAndServe(puerto, nil); err != nil {
+		log.Fatalf("Error critico al iniciar el servidor en el puerto %s: %v", puerto, err)
 	}
 }
