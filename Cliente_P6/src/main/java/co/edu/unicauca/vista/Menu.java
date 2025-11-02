@@ -7,8 +7,8 @@ import java.util.List;
 import co.edu.unicauca.fachadaServices.DTO.CancionDTO;
 import co.edu.unicauca.fachadaServices.DTO.PreferenciasDTORespuesta;
 import co.edu.unicauca.fachadaServices.services.FachadaGestorUsuariosIml;
-import co.edu.unicauca.utilidades.CancionesHttpClient;
-import co.edu.unicauca.utilidades.StreamingAudioClient;
+import co.edu.unicauca.infraestructura.CancionesHttpClient;
+import co.edu.unicauca.infraestructura.StreamingAudioClient;
 import co.edu.unicauca.utilidades.UtilidadesConsola;
 
 /**
@@ -125,7 +125,8 @@ public class Menu {
         // 5. Inicia la reproducción y la lógica de espera/detención.
         streamingClient.reproducirCancion(nombreArchivo, this.userId);
         
-        System.out.println("\n+++ Reproduciendo '" + cancionSeleccionada.getTitulo() + "'... Presione Enter para detener. +++");
+        System.out.println("\n Reproduciendo " + cancionSeleccionada.getTitulo());
+        System.out.println(" Presione ENTER para detener la reproduccion o continuar al menú...");
         try {
             System.in.read();
             while (System.in.available() > 0) System.in.read();
@@ -134,33 +135,56 @@ public class Menu {
         }
         
         streamingClient.detenerReproduccion();
-        System.out.println("--- Reproduccion detenida. Volviendo al menu principal. ---");
+        System.out.println("--- Volviendo al menu principal. ---");
     }
 
-    private void opcionVerPreferencias() {
+     private void opcionVerPreferencias() {
         streamingClient.detenerReproduccion();
-        System.out.println("\nConsultando sus preferencias...");
+        System.out.println("\nConsultando sus preferencias desde el servidor...");
         try {
+            // 1. Obtenemos el objeto de respuesta completo del servidor de preferencias.
             PreferenciasDTORespuesta respuesta = this.objFachada.getReferencias(this.userId);
+
+            // Primero, verificamos si hay alguna preferencia.
+            boolean sinPreferencias = (respuesta.getPreferenciasGeneros() == null || respuesta.getPreferenciasGeneros().isEmpty())
+                                   && (respuesta.getPreferenciasArtistas() == null || respuesta.getPreferenciasArtistas().isEmpty())
+                                   && (respuesta.getPreferenciasIdiomas() == null || respuesta.getPreferenciasIdiomas().isEmpty());
+
+            if (sinPreferencias) {
+                System.out.println("\n== Sus Preferencias ==");
+                System.out.println("Aun no tiene suficientes reproducciones para calcular sus preferencias.");
+                return;
+            }
+            
             System.out.println("\n== Sus Preferencias ==");
 
-            System.out.println("\nGeneros mas escuchados:");
-            if (respuesta.getPreferenciasGeneros().isEmpty()) {
-                System.out.println("   - Aun no ha escuchado canciones.");
-            } else {
-                respuesta.getPreferenciasGeneros().forEach(genero ->
-                    System.out.println("   - " + genero.getNombreGenero() + " (" + genero.getNumeroPreferencias() + " veces)"));
-            }
+            // 2. Mostramos las preferencias por Género.
+            System.out.println("\n-- Generos mas escuchados --");
+            respuesta.getPreferenciasGeneros().forEach(genero ->
+                System.out.printf("   - %s (%d veces)\n", genero.getNombreGenero(), genero.getNumeroPreferencias()));
 
-            System.out.println("\nArtistas mas escuchados:");
-            if (respuesta.getPreferenciasArtistas().isEmpty()) {
-                System.out.println("   - Aun no ha escuchado canciones.");
+            // 3. Mostramos las preferencias por Artista.
+            System.out.println("\n-- Artistas mas escuchados --");
+            respuesta.getPreferenciasArtistas().forEach(artista ->
+                System.out.printf("   - %s (%d veces)\n", artista.getNombreArtista(), artista.getNumeroPreferencias()));
+
+            // --- INICIO DEL CAMBIO ---
+            // 4. Mostramos las nuevas preferencias por Idioma.
+            System.out.println("\n-- Idiomas mas escuchados --");
+            // Verificamos que la lista no sea nula antes de intentar recorrerla.
+            if (respuesta.getPreferenciasIdiomas() != null && !respuesta.getPreferenciasIdiomas().isEmpty()) {
+                respuesta.getPreferenciasIdiomas().forEach(idioma ->
+                    System.out.printf("   - %s (%d veces)\n", idioma.getNombreIdioma(), idioma.getNumeroPreferencias()));
             } else {
-                respuesta.getPreferenciasArtistas().forEach(artista ->
-                    System.out.println("   - " + artista.getNombreArtista() + " (" + artista.getNumeroPreferencias() + " veces)"));
+                // Esto no debería pasar si hay otras preferencias, pero es una buena verificación.
+                System.out.println("   - No hay datos de idiomas.");
             }
+            // --- FIN DEL CAMBIO ---
+
         } catch (RemoteException e) {
-            System.out.println("Error al consultar preferencias: " + e.getMessage());
+            System.out.println("ERROR al consultar las preferencias: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Ocurrio un error inesperado: " + e.getMessage());
         }
     }
 

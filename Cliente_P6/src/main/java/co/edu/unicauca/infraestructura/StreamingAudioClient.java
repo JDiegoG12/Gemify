@@ -1,4 +1,4 @@
-package co.edu.unicauca.utilidades;
+package co.edu.unicauca.infraestructura;
 
 import co.edu.unicauca.distribuidos.streaming.AudioServiceGrpc;
 import co.edu.unicauca.distribuidos.streaming.StreamingProto.FragmentoCancion;
@@ -142,7 +142,7 @@ public class StreamingAudioClient {
      * @param pipeOut       flujo de salida conectado al pipe de audio
      */
     private void recibirFragmentos(String nombreCancion, int idUsuario, PipedOutputStream pipeOut) {
-        System.out.println("[Hilo de Red] Iniciado.");
+        //System.out.println("[Hilo de Red] Iniciado.");
         try {
             PeticionDTO request = PeticionDTO.newBuilder()
                     .setNombreCancion(nombreCancion)
@@ -161,7 +161,7 @@ public class StreamingAudioClient {
             if (isPlaying)
                 System.err.println("[Hilo de Red] ERROR: " + e.getMessage());
         } finally {
-            System.out.println("[Hilo de Red] Finalizado.");
+            //System.out.println("[Hilo de Red] Finalizado.");
             try {
                 pipeOut.close();
             } catch (Exception e) {
@@ -179,7 +179,7 @@ public class StreamingAudioClient {
      * @param pipeIn flujo de entrada conectado al pipe de red
      */
     private void recibirYReproducirComoArchivo(PipedInputStream pipeIn) {
-        System.out.println("[Hilo de Audio] Recibiendo fragmentos...");
+        //System.out.println("[Hilo de Audio] Recibiendo fragmentos...");
         Path tempFile = null;
         try {
             tempFile = Files.createTempFile("spotifake_", ".mp3");
@@ -191,7 +191,7 @@ public class StreamingAudioClient {
                 }
             }
             if (isPlaying) {
-                System.out.println("[Hilo de Audio] Archivo temporal guardado: " + tempFile);
+                //System.out.println("[Hilo de Audio] Archivo temporal guardado: " + tempFile);
                 reproducirMp3ConJLayer(tempFile.toFile());
             }
         } catch (Exception e) {
@@ -294,7 +294,7 @@ public class StreamingAudioClient {
      */
     public void detenerReproduccion() {
         if (this.isPlaying) {
-            System.out.println("<< Deteniendo la reproduccion...");
+            System.out.println("<< Saliendo  de la reproduccion...");
             this.isPlaying = false;
 
             if (this.audioLine != null) {

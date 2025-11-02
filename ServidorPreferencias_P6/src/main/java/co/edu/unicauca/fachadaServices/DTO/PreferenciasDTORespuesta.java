@@ -11,4 +11,5 @@ public class PreferenciasDTORespuesta implements Serializable {
     private int idUsuario;
     private List<PreferenciaGeneroDTORespuesta> preferenciasGeneros;
     private List<PreferenciaArtistaDTORespuesta> preferenciasArtistas;
+    private List<PreferenciaIdiomaDTORespuesta> preferenciasIdiomas; 
 }

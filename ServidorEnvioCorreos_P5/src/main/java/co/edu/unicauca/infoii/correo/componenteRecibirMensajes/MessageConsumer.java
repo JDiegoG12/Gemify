@@ -3,7 +3,7 @@ package co.edu.unicauca.infoii.correo.componenteRecibirMensajes;
 import co.edu.unicauca.infoii.correo.DTOs.CancionAlmacenarDTOInput;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
-
+import co.edu.unicauca.infoii.correo.commons.Simulacion;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
@@ -72,6 +72,7 @@ public class MessageConsumer {
         System.out.println("-> Datos crudos recibidos: " + cancionRecibida.toString());
 
         System.out.println("\n Simulando envío de correo electrónico...");
+        Simulacion.simular(5000, "Enviando correo de notificación...");
         
         // Fecha y hora actual
         LocalDateTime ahora = LocalDateTime.now();
