@@ -1,0 +1,35 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "co.edu.unicauca.main.Main",
+            "projectName": "cliente_java_streaming"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "co.edu.unicauca.main.Main",
+            "projectName": "servidor_java_rmi"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "co.edu.unicauca.main.Main",
+            "projectName": "cliente_java_rmi"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-CorreoApplication<correo>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "co.edu.unicauca.infoii.correo.CorreoApplication",
+            "projectName": "correo",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

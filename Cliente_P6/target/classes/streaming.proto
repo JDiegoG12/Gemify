@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package servicios_streaming;
+
+// Opción para generar el código de Go en el paquete correcto.
+option go_package = "./servicios_streaming";
+
+// Opciones para generar el código de Java en una estructura limpia.
+option java_package = "co.edu.unicauca.distribuidos.streaming";
+option java_outer_classname = "StreamingProto";
+
+// El servicio de streaming de audio.
+service AudioService {
+    // Un RPC de streaming del servidor. El cliente envía una petición con el
+    // nombre de la canción y el servidor responde con un flujo de fragmentos de audio.
+    rpc StreamAudio(PeticionDTO) returns (stream FragmentoCancion);
+}
+
+// Mensaje que el cliente envía para solicitar una canción.
+message PeticionDTO {
+    // El nombre del archivo de la canción, ej: "Lamento boliviano.mp3"
+    string nombreCancion = 1;
+}
+
+// Mensaje que el servidor envía en el stream, conteniendo un fragmento de la canción.
+message FragmentoCancion {
+    // Un trozo (chunk) del archivo de audio en bytes.
+    bytes data = 1;
+}
