@@ -71,6 +71,15 @@ Un servicio de soporte que simula el envío de notificaciones por correo.
 
 ---
 
+## 🧩 Diagrama de Contenedores
+<img width="2001" height="1021" alt="ParcialLabDistribuidos-REQ2-CONTENEDORES drawio (2)" src="https://github.com/user-attachments/assets/b10c5fe9-8b84-4add-a8e3-5deb488afb94" />
+
+## 🧩 Diagrama de Componentes
+<img width="5578" height="2159" alt="ParcialLabDistribuidos-REQ2-COMPONENTES drawio (2)" src="https://github.com/user-attachments/assets/120ab1c3-9d0c-435a-82ed-d4dd57a74f85" />
+
+
+---
+
 ## 👥 Autores
 
 Este proyecto fue desarrollado como parte del laboratorio de Sistemas Distribuidos por:
