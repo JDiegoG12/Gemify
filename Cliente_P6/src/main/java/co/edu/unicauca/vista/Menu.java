@@ -7,8 +7,8 @@ import java.util.List;
 import co.edu.unicauca.fachadaServices.DTO.CancionDTO;
 import co.edu.unicauca.fachadaServices.DTO.PreferenciasDTORespuesta;
 import co.edu.unicauca.fachadaServices.services.FachadaGestorUsuariosIml;
-import co.edu.unicauca.infraestructura.CancionesHttpClient;
-import co.edu.unicauca.infraestructura.StreamingAudioClient;
+import co.edu.unicauca.fachadaServices.services.FachadaCanciones;
+import co.edu.unicauca.fachadaServices.services.FachadaStreaming;
 import co.edu.unicauca.utilidades.UtilidadesConsola;
 
 /**
@@ -16,16 +16,16 @@ import co.edu.unicauca.utilidades.UtilidadesConsola;
  */
 public class Menu {
 
-    private final FachadaGestorUsuariosIml objFachada;
+    private final FachadaGestorUsuariosIml objFachadaRMI;
     private final Integer userId;
-    private final CancionesHttpClient cancionesClient;
-    private final StreamingAudioClient streamingClient;
+    private final FachadaCanciones cancionesClient;
+    private final FachadaStreaming streamingClient;
 
-    public Menu(FachadaGestorUsuariosIml objFachada, Integer userId) {
-        this.objFachada = objFachada;
+    public Menu(FachadaGestorUsuariosIml objFachadaRMI, Integer userId) {
+        this.objFachadaRMI = objFachadaRMI;
         this.userId = userId;
-        this.cancionesClient = new CancionesHttpClient();
-        this.streamingClient = new StreamingAudioClient("localhost", 50051);
+        this.cancionesClient = new FachadaCanciones();
+        this.streamingClient = new FachadaStreaming();
     }
 
     public void ejecutarMenuPrincipal() {
@@ -143,7 +143,7 @@ public class Menu {
         System.out.println("\nConsultando sus preferencias desde el servidor...");
         try {
             // 1. Obtenemos el objeto de respuesta completo del servidor de preferencias.
-            PreferenciasDTORespuesta respuesta = this.objFachada.getReferencias(this.userId);
+            PreferenciasDTORespuesta respuesta = this.objFachadaRMI.getReferencias(this.userId);
 
             // Primero, verificamos si hay alguna preferencia.
             boolean sinPreferencias = (respuesta.getPreferenciasGeneros() == null || respuesta.getPreferenciasGeneros().isEmpty())
